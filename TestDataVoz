@@ -1,0 +1,29 @@
+package testClasses;
+
+import org.testng.annotations.DataProvider;
+
+public class TestDataVoz {
+	public String correctFirstName = "Nikola";
+	public String correctLastName = "Medan";
+	public String correctDay = "15";
+	public String correctMonth = "Feb";
+	public String correctYear = "1991";
+	public String correctPhone = "2312345666";
+	public String correctEmail = "nikola@gmail.com";
+	public String correctPassword = "nikola991";
+
+	@DataProvider(name = "incorrectCredentials")
+	public Object[][] loginTestVoz() {
+		return new Object[][] { { "", "Medan", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazno
+																														// ime
+				{ "Nikola", "", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazno prezime
+				{ "Nikola", "Medan", "", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazan dan
+				{ "Nikola", "Medan", "15", "", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazan mesec
+				{ "Nikola", "Medan", "15", "Feb", "", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazna godina
+				{ "Nikola", "Medan", "15", "Feb", "1991", "", "nikola@gmail.com", "nikola991" }, // Prazan telefon
+				{ "Nikola", "Medan", "15", "Feb", "1991", "2312345666", "", "nikola991" }, // Prazan email
+				{ "Nikola", "Medan", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "" } // Prazna lozinka
+		};
+
+	}
+}
