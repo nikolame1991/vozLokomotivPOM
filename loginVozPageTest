@@ -1,0 +1,98 @@
+package testClasses;
+
+import static org.testng.Assert.assertEquals;
+
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+public class loginVozPageTest extends BaseTestClassVoz {
+
+	@BeforeMethod
+	public void navigation() {
+		driver.navigate().to("https://webapi1.srbvoz.rs/ekarta/app/#!/login");
+	}
+
+	@AfterMethod
+	public void deleteCookies() {
+		driver.manage().deleteAllCookies();
+	}
+
+	@Test
+	public void loginWithOutCredentials() {
+		String actualTitle = vozLoginPage.getText();
+		String expectedTitle = "PRIJAVA NA SISTEM ILI REGISTRACIJA";
+		assertEquals(actualTitle, expectedTitle);
+
+		vozLoginPage.loginFirstName("");
+		vozLoginPage.loginLastName("");
+		vozLoginPage.selectDay("15");
+		vozLoginPage.selectMonth("Feb");
+		vozLoginPage.selectYear("1991");
+		vozLoginPage.loginPhoneNumber("123456789");
+		vozLoginPage.loginEmail("nikola@gmail.com");
+		vozLoginPage.enterPassword("nikola991");
+		vozLoginPage.isPromoChecked();
+		vozLoginPage.clickRegistre();
+	}
+
+	// 2.test case: Samo provera lozinka
+	@Test
+	public void loginCorrectPassword() {
+		String actualTitle = vozLoginPage.getText();
+		String expectedTitle = "PRIJAVA NA SISTEM ILI REGISTRACIJA";
+		assertEquals(actualTitle, expectedTitle);
+
+		vozLoginPage.enterPassword("12345");
+		if (vozLoginPage.isMinlengthMessageDisplayed()) {
+			System.out.println("Test prošao: Prikazana je poruka 'Minimalno 9 karaktera'");
+		} else {
+			System.out.println("Test nije prošao: Poruka nije prikazana");
+		}
+	}
+
+	// 3 test case: provera ime
+	@Test
+	public void loginCheckName() {
+		String actualTitle = vozLoginPage.getText();
+		String expectedTitle = "PRIJAVA NA SISTEM ILI REGISTRACIJA";
+		assertEquals(actualTitle, expectedTitle);
+
+		vozLoginPage.loginFirstName("Nikola");
+	}
+
+	// 4 test case: Nevalidni kredencijali
+	@Test
+	public void loginCorrectCredentials() {
+		vozLoginPage.loginFirstName("adadasdasdasd");
+		vozLoginPage.loginLastName("adssssssssss");
+		vozLoginPage.loginPhoneNumber("lkjlkjlkjlkj");
+		vozLoginPage.enterPassword("asdasd");
+		if (vozLoginPage.isMinlengthMessageDisplayed()) {
+			System.out.println("Test prošao: Prikazana je poruka 'Minimalno 9 karaktera'");
+		} else {
+			System.out.println("Test nije prošao: Poruka nije prikazana");
+		}
+
+	}
+
+	// 5 test case: Validne Kredencijali
+	@Test
+	public void loginWithvalidate() {
+		String actualTitle = vozLoginPage.getText();
+		String expectedTitle = "PRIJAVA NA SISTEM ILI REGISTRACIJA";
+		assertEquals(actualTitle, expectedTitle);
+
+		vozLoginPage.loginFirstName(vozTestData.correctFirstName);
+		vozLoginPage.loginLastName(vozTestData.correctLastName);
+		vozLoginPage.selectDay(vozTestData.correctDay);
+		vozLoginPage.selectMonth(vozTestData.correctMonth);
+		vozLoginPage.selectYear(vozTestData.correctYear);
+		vozLoginPage.loginPhoneNumber(vozTestData.correctPhone);
+		vozLoginPage.loginEmail(vozTestData.correctEmail);
+		vozLoginPage.enterPassword(vozTestData.correctPassword);
+		vozLoginPage.isPromoChecked();
+		vozLoginPage.isInfoCheckde();
+		vozLoginPage.clickRegistre();
+	}
+}
