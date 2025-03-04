@@ -1,0 +1,38 @@
+package testClasses;
+
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
+
+import pageClasses.HomePageVozClass;
+import pageClasses.loginVozPageClass;
+
+public class BaseTestClassVoz {
+	WebDriver driver;
+
+	loginVozPageClass vozLoginPage;
+	HomePageVozClass vozHomePageVozClass;
+
+	TestDataVoz vozTestData;
+
+	@BeforeMethod
+	public void initalization() {
+
+		driver = new ChromeDriver();
+		driver.manage().window().maximize();
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+
+		vozLoginPage = new loginVozPageClass(driver);
+		vozHomePageVozClass = new HomePageVozClass(driver);
+		vozTestData = new TestDataVoz();
+
+	}
+
+	@AfterTest
+	public void closeDriver() {
+		driver.quit();
+	}
+}
