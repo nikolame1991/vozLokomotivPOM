@@ -1,0 +1,150 @@
+package pageClasses;
+
+import java.time.Duration;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class loginVozPageClass {
+	WebDriver driver;
+	WebDriverWait wait;
+
+	// Element
+	@FindBy(css = ".sv-form-header > h4 ")
+	WebElement titleH4;
+
+	@FindBy(css = "#firstName")
+	WebElement inputFieldIme;
+
+	@FindBy(css = "#lastName")
+	WebElement inputFieldPrezime;
+
+	@FindBy(css = "[ng-model=\"date\"]")
+	WebElement dropDownDay;
+
+	@FindBy(css = "[ng-model=\"month\"]")
+	WebElement dropDownMonth;
+
+	@FindBy(css = "[ng-model=\"year\"]")
+	WebElement droDownYear;
+
+	@FindBy(css = "#telefon")
+	WebElement inputFieldNumber;
+
+	@FindBy(css = "#email")
+	WebElement inputFieldEmail;
+
+	@FindBy(css = "#passwordr")
+	WebElement inputFieldPassword;
+
+	@FindBy(css = "form > :nth-child(7) > small:nth-child(3)")
+	WebElement firstMessagePassword;
+
+	@FindBy(css = "[ng-hide=\"passwordValid\"]")
+	WebElement secondMessagePassword;
+
+	@FindBy(css = "[ng-model=\"registration.promo\"]")
+	WebElement checkboxPromo;
+
+	@FindBy(css = "[ng-model=\"registration.info\"]")
+	WebElement checkboxInfo;
+
+	@FindBy(css = "[ng-click=\" register()\"]")
+	WebElement registerButton;
+
+	@FindBy(css = "[ng-show=\"loadingmess\"]")
+	WebElement loadingMessage;
+
+	// Konstruktor
+	public loginVozPageClass(WebDriver driver) {
+		this.driver = driver;
+		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+		PageFactory.initElements(driver, this);
+	}
+
+	// Metod
+	public String getText() {
+		wait.until(ExpectedConditions.visibilityOf(titleH4));
+		return titleH4.getText();
+	}
+
+	public void loginFirstName(String firstName) {
+		wait.until(ExpectedConditions.visibilityOf(inputFieldIme));
+		inputFieldIme.sendKeys(firstName);
+	}
+
+	public void loginLastName(String lastName) {
+		wait.until(ExpectedConditions.visibilityOf(inputFieldPrezime));
+		inputFieldPrezime.sendKeys(lastName);
+	}
+
+	public void selectDay(String day) {
+		wait.until(ExpectedConditions.visibilityOf(dropDownDay));
+		Select select = new Select(dropDownDay);
+		select.selectByVisibleText(day);
+	}
+
+	public void selectMonth(String month) {
+		wait.until(ExpectedConditions.visibilityOf(dropDownMonth));
+		Select select = new Select(dropDownMonth);
+		select.selectByVisibleText(month);
+	}
+
+	public void selectYear(String year) {
+		wait.until(ExpectedConditions.visibilityOf(droDownYear));
+		Select select = new Select(droDownYear);
+		select.selectByVisibleText(year);
+	}
+
+	public void loginPhoneNumber(String phone) {
+		wait.until(ExpectedConditions.visibilityOf(inputFieldNumber));
+		inputFieldNumber.sendKeys(phone);
+	}
+
+	public void loginEmail(String email) {
+		wait.until(ExpectedConditions.visibilityOf(inputFieldEmail));
+		inputFieldEmail.sendKeys(email);
+	}
+
+	public void enterPassword(String password) {
+		wait.until(ExpectedConditions.visibilityOf(inputFieldPassword));
+		inputFieldPassword.sendKeys(password);
+	}
+
+	public boolean isMinlengthMessageDisplayed() {
+		return firstMessagePassword.isDisplayed();
+	}
+
+	public boolean isInvalidCharMessageDisplayed() {
+		return secondMessagePassword.isDisplayed();
+	}
+
+	public boolean isPromoChecked() {
+		return checkboxPromo.isSelected();
+	}
+
+	public boolean isInfoCheckde() {
+		return checkboxInfo.isSelected();
+	}
+
+	public void checkPromo() {
+		if (!checkboxPromo.isSelected()) {
+			checkboxPromo.click();
+		}
+	}
+
+	public void toggleInfoCheckbox() {
+		wait.until(ExpectedConditions.elementToBeClickable(checkboxInfo));
+		checkboxInfo.click();
+	}
+
+	public void clickRegistre() {
+		wait.until(ExpectedConditions.elementToBeClickable(registerButton));
+		registerButton.click();
+	}
+}
