@@ -16,17 +16,20 @@ public class HomePageVozClass {
 	WebDriver driver;
 	WebDriverWait wait;
 
-	// Element
+	// ===============================
+	// Web Elements (Page Object Model)
+	// ===============================
+
 	@FindBy(css = "#stanicaod")
 	WebElement stanicaOdField;
 
 	@FindBy(css = "#stanicado")
 	WebElement stanicaDoField;
 
-	@FindBy(css = ".dropdown-menu") // Dropdown meni
+	@FindBy(css = ".dropdown-menu")
 	WebElement dropdownMenu;
 
-	@FindBy(css = ".dropdown-menu li") // Opcije u dropdownu
+	@FindBy(css = ".dropdown-menu li")
 	List<WebElement> stationSuggestions;
 
 	@FindBy(css = "[ng-click=\"open()\"]")
@@ -47,101 +50,122 @@ public class HomePageVozClass {
 	@FindBy(linkText = "DALJE »")
 	WebElement daljeButton;
 
-	// Konstruktor
+	// ===============================
+	// Constructor
+	// ===============================
+
 	public HomePageVozClass(WebDriver driver) {
 		this.driver = driver;
 		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		PageFactory.initElements(driver, this);
 	}
 
-	// Metod
+	// ===============================
+	// Methods / Page Actions
+	// ===============================
+
+	/**
+	 * Selects a station by typing partial input, then matching full station name
+	 * from dropdown suggestions.
+	 *
+	 * @param stationField  WebElement for input field
+	 * @param inputText     Text to type into the field
+	 * @param fullStation   Full name of the station to select
+	 */
 	public void selectStation(WebElement stationField, String inputText, String fullStation) {
-		stationField.click(); // Klik na polje
-		stationField.clear(); // Brisanje sadržaja ako ga ima
-		stationField.sendKeys(inputText); // Upisivanje slova
+		stationField.click();
+		stationField.clear();
+		stationField.sendKeys(inputText);
 
 		try {
-			// Čekanje da se pojavi makar jedna stavka u dropdownu
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".dropdown-menu li")));
 
-			// Učitavanje svih opcija u dropdownu
 			List<WebElement> suggestions = driver.findElements(By.cssSelector(".dropdown-menu li"));
 
 			if (suggestions.isEmpty()) {
-				System.out.println("⚠ Nema pronađenih stanica, pokušavam ENTER.");
+				System.out.println("⚠ No station suggestions found, trying ENTER.");
 				stationField.sendKeys(Keys.ENTER);
 				return;
 			}
 
 			for (WebElement suggestion : suggestions) {
-				System.out.println("🔹 Opcija: " + suggestion.getText()); // Debug ispis
+				System.out.println("🔹 Option: " + suggestion.getText());
 				if (suggestion.getText().trim().equalsIgnoreCase(fullStation)) {
 					wait.until(ExpectedConditions.elementToBeClickable(suggestion));
 					suggestion.click();
-					System.out.println("✅ Kliknuto na: " + fullStation);
+					System.out.println("✅ Clicked: " + fullStation);
 					return;
 				}
 			}
 
-			// Ako opcija nije pronađena, pokušavamo ENTER
-			System.out.println("⚠ Stanica nije pronađena u dropdown-u, pokušavam ENTER.");
+			System.out.println("⚠ Station not found in dropdown, trying ENTER.");
 			stationField.sendKeys(Keys.ENTER);
 		} catch (Exception e) {
-			System.out.println("❌ Dropdown se nije pojavio, pokušavam ENTER.");
+			System.out.println("❌ Dropdown did not appear, trying ENTER.");
 			stationField.sendKeys(Keys.ENTER);
 		}
-
 	}
 
-	// Metoda za unos obe stanice
+	/**
+	 * Fills in both departure and arrival stations using predefined values.
+	 */
 	public void enterStations() {
 		selectStation(stanicaOdField, "be", "Beograd Centar");
 		selectStation(stanicaDoField, "no", "Novi Sad");
 	}
 
+	/**
+	 * Opens the calendar popup.
+	 */
 	public void openLeftCalendar() {
-		wait.until(ExpectedConditions.elementToBeClickable(clickCalendar));
-		clickCalendar.click();
+		wait.until(ExpectedConditions.elementToBeClickable(clickCalendar)).click();
 	}
 
+	/**
+	 * Clicks the right arrow to navigate to next month in the calendar.
+	 */
 	public void clickArrowRight() {
-		wait.until(ExpectedConditions.elementToBeClickable(arrowRight));
-		arrowRight.click();
+		wait.until(ExpectedConditions.elementToBeClickable(arrowRight)).click();
 	}
 
+	/**
+	 * Clicks on the first available day in the calendar.
+	 */
 	public void firstDayClick() {
-		wait.until(ExpectedConditions.elementToBeClickable(clickFirstDay));
-		clickFirstDay.click();
+		wait.until(ExpectedConditions.elementToBeClickable(clickFirstDay)).click();
 	}
 
+	/**
+	 * Clicks the search button ("Traži") to submit search query.
+	 */
 	public void trazuButtonClick() {
-		wait.until(ExpectedConditions.elementToBeClickable(clickButtonTrazi));
-		clickButtonTrazi.click();
+		wait.until(ExpectedConditions.elementToBeClickable(clickButtonTrazi)).click();
 	}
 
+	/**
+	 * Clicks on the first available "Izaberi" (Select) button, if visible.
+	 */
 	public void klikNaIzaberi() {
 		try {
-			// Čekaj da makar jedno dugme postane vidljivo
-			wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(
-					"//*[@id=\"main\"]/div/div[1]/div/ng-view/div/div/div[3]/div[3]/table/tbody/tr[2]/td[6]/div[1]")));
+			wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
+				By.xpath("//*[@id=\"main\"]/div/div[1]/div/ng-view/div/div/div[3]/div[3]/table/tbody/tr[2]/td[6]/div[1]")));
 
 			if (izaberiDugmad.isEmpty()) {
-				System.out.println("❌ Nema dugmadi za izaberi.");
+				System.out.println("❌ No 'Izaberi' buttons found.");
 				return;
 			}
 
-			// Petlja kroz sva pronađena dugmad
 			for (WebElement dugme : izaberiDugmad) {
 				if (dugme.isDisplayed() && dugme.isEnabled()) {
 					dugme.click();
-					System.out.println("✅ Kliknuto na dugme!");
+					System.out.println("✅ Clicked on 'Izaberi' button.");
 					return;
 				}
 			}
 
-			System.out.println("⚠ Nema vidljivih dugmadi za klik.");
+			System.out.println("⚠ No visible 'Izaberi' buttons to click.");
 		} catch (Exception e) {
-			System.out.println("❌ Greška prilikom klika na dugme: " + e.getMessage());
+			System.out.println("❌ Error while clicking 'Izaberi' button: " + e.getMessage());
 		}
 	}
 }
