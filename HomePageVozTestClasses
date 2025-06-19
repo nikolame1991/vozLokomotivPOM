@@ -4,27 +4,53 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+/**
+ * This test class contains an end-to-end UI test for the SRB Voz homepage,
+ * using the Page Object Model and TestNG annotations.
+ */
 public class HomePageVozTestClasses extends BaseTestClassVoz {
 
+	/**
+	 * This method runs before each test.
+	 * It navigates to the SRB Voz homepage URL.
+	 */
 	@BeforeMethod
 	public void navigation() {
 		driver.get("https://webapi1.srbvoz.rs/ekarta/app/#!/home");
 	}
 
+	/**
+	 * This method runs after each test.
+	 * It clears browser cookies to avoid session-related issues.
+	 */
 	@AfterMethod
 	public void deleteCookies() {
 		driver.manage().deleteAllCookies();
 	}
 
+	/**
+	 * This test:
+	 * - Enters departure and arrival stations
+	 * - Opens calendar and selects a travel date
+	 * - Clicks the search button
+	 * - Selects one of the available results
+	 */
 	@Test
 	public void testEnterStations() {
-		System.out.println("Test za unos stanica je pokrenut!");
+		System.out.println("🟢 Test for station input started.");
 		vozHomePageVozClass.enterStations();
-		System.out.println("Test je završen!");
+
+		System.out.println("📅 Opening calendar and selecting date...");
 		vozHomePageVozClass.openLeftCalendar();
 		vozHomePageVozClass.clickArrowRight();
 		vozHomePageVozClass.firstDayClick();
+
+		System.out.println("🔍 Submitting search...");
 		vozHomePageVozClass.trazuButtonClick();
+
+		System.out.println("✅ Attempting to select result...");
 		vozHomePageVozClass.klikNaIzaberi();
+
+		System.out.println("🏁 Test completed.");
 	}
 }
