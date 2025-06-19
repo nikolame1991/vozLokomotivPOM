@@ -78,16 +78,20 @@ public class HomePageVozClass {
 		stationField.sendKeys(inputText);
 
 		try {
+			// Wait for dropdown options to appear
 			wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector(".dropdown-menu li")));
 
+			// Fetch all station suggestions
 			List<WebElement> suggestions = driver.findElements(By.cssSelector(".dropdown-menu li"));
 
 			if (suggestions.isEmpty()) {
+				// If no suggestions found, fallback to pressing ENTER
 				System.out.println("⚠ No station suggestions found, trying ENTER.");
 				stationField.sendKeys(Keys.ENTER);
 				return;
 			}
 
+			// Iterate through suggestions to find exact match
 			for (WebElement suggestion : suggestions) {
 				System.out.println("🔹 Option: " + suggestion.getText());
 				if (suggestion.getText().trim().equalsIgnoreCase(fullStation)) {
@@ -98,9 +102,11 @@ public class HomePageVozClass {
 				}
 			}
 
+			// If no match found in suggestions, fallback to ENTER key
 			System.out.println("⚠ Station not found in dropdown, trying ENTER.");
 			stationField.sendKeys(Keys.ENTER);
 		} catch (Exception e) {
+			// If dropdown never appeared or other error occurred, fallback to ENTER
 			System.out.println("❌ Dropdown did not appear, trying ENTER.");
 			stationField.sendKeys(Keys.ENTER);
 		}
@@ -147,14 +153,17 @@ public class HomePageVozClass {
 	 */
 	public void klikNaIzaberi() {
 		try {
+			// Wait until at least one "choose" button is present
 			wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(
 				By.xpath("//*[@id=\"main\"]/div/div[1]/div/ng-view/div/div/div[3]/div[3]/table/tbody/tr[2]/td[6]/div[1]")));
 
 			if (izaberiDugmad.isEmpty()) {
+				// If no buttons found, log and exit
 				System.out.println("❌ No 'Izaberi' buttons found.");
 				return;
 			}
 
+			// Loop through all buttons and click the first visible and enabled one
 			for (WebElement dugme : izaberiDugmad) {
 				if (dugme.isDisplayed() && dugme.isEnabled()) {
 					dugme.click();
@@ -163,8 +172,10 @@ public class HomePageVozClass {
 				}
 			}
 
+			// If none are visible/enabled, log a warning
 			System.out.println("⚠ No visible 'Izaberi' buttons to click.");
 		} catch (Exception e) {
+			// Log any unexpected errors during the click attempt
 			System.out.println("❌ Error while clicking 'Izaberi' button: " + e.getMessage());
 		}
 	}
