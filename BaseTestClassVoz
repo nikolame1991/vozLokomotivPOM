@@ -13,24 +13,29 @@ import pageClasses.loginVozPageClass;
 public class BaseTestClassVoz {
 	WebDriver driver;
 
+	// Page Object instances
 	loginVozPageClass vozLoginPage;
 	HomePageVozClass vozHomePageVozClass;
 
+	// Test data instance
 	TestDataVoz vozTestData;
 
+	// This method runs before each test method
+	// Initializes WebDriver and Page Object classes
 	@BeforeMethod
 	public void initalization() {
+		driver = new ChromeDriver(); // Start Chrome browser
+		driver.manage().window().maximize(); // Maximize browser window
+		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30)); // Set implicit wait
 
-		driver = new ChromeDriver();
-		driver.manage().window().maximize();
-		driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
-
+		// Initialize Page Object Model classes and test data
 		vozLoginPage = new loginVozPageClass(driver);
 		vozHomePageVozClass = new HomePageVozClass(driver);
 		vozTestData = new TestDataVoz();
-
 	}
 
+	// This method runs after all test methods in the class have been executed
+	// Closes the browser and ends the session
 	@AfterTest
 	public void closeDriver() {
 		driver.quit();
