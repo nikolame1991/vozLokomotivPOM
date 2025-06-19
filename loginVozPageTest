@@ -6,18 +6,32 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+/**
+ * TestNG class for automating login and registration functionality on the SRB Voz website.
+ * This includes various positive and negative test scenarios using methods from the Page Object class.
+ */
 public class loginVozPageTest extends BaseTestClassVoz {
 
+	/**
+	 * Navigates to the login/registration page before each test.
+	 */
 	@BeforeMethod
 	public void navigation() {
 		driver.navigate().to("https://webapi1.srbvoz.rs/ekarta/app/#!/login");
 	}
 
+	/**
+	 * Deletes all cookies after each test to ensure clean session.
+	 */
 	@AfterMethod
 	public void deleteCookies() {
 		driver.manage().deleteAllCookies();
 	}
 
+	/**
+	 * Test Case 1: Submit the registration form with missing credentials (empty first and last name).
+	 * Expected behavior: Form should not be submitted; validation messages may appear.
+	 */
 	@Test
 	public void loginWithOutCredentials() {
 		String actualTitle = vozLoginPage.getText();
@@ -32,26 +46,32 @@ public class loginVozPageTest extends BaseTestClassVoz {
 		vozLoginPage.loginPhoneNumber("123456789");
 		vozLoginPage.loginEmail("nikola@gmail.com");
 		vozLoginPage.enterPassword("nikola991");
-		vozLoginPage.isPromoChecked();
+		vozLoginPage.isPromoChecked(); // Just checking state, no assertion
 		vozLoginPage.clickRegistre();
 	}
 
-	// 2.test case: Samo provera lozinka
+	/**
+	 * Test Case 2: Enter a password shorter than 9 characters to trigger minlength validation.
+	 * Expected behavior: "Minimum 9 characters" warning message should be displayed.
+	 */
 	@Test
 	public void loginCorrectPassword() {
 		String actualTitle = vozLoginPage.getText();
 		String expectedTitle = "PRIJAVA NA SISTEM ILI REGISTRACIJA";
 		assertEquals(actualTitle, expectedTitle);
 
-		vozLoginPage.enterPassword("12345");
+		vozLoginPage.enterPassword("12345"); // Invalid short password
 		if (vozLoginPage.isMinlengthMessageDisplayed()) {
-			System.out.println("Test prošao: Prikazana je poruka 'Minimalno 9 karaktera'");
+			System.out.println("Test PASSED: 'Minimum 9 characters' warning is displayed.");
 		} else {
-			System.out.println("Test nije prošao: Poruka nije prikazana");
+			System.out.println("Test FAILED: Warning message not displayed.");
 		}
 	}
 
-	// 3 test case: provera ime
+	/**
+	 * Test Case 3: Enter a valid first name only (for partial form test).
+	 * Expected behavior: No validation triggered yet.
+	 */
 	@Test
 	public void loginCheckName() {
 		String actualTitle = vozLoginPage.getText();
@@ -61,22 +81,28 @@ public class loginVozPageTest extends BaseTestClassVoz {
 		vozLoginPage.loginFirstName("Nikola");
 	}
 
-	// 4 test case: Nevalidni kredencijali
+	/**
+	 * Test Case 4: Enter completely invalid credentials (nonsense values).
+	 * Expected behavior: Validation messages should appear, especially for password.
+	 */
 	@Test
 	public void loginCorrectCredentials() {
 		vozLoginPage.loginFirstName("adadasdasdasd");
 		vozLoginPage.loginLastName("adssssssssss");
 		vozLoginPage.loginPhoneNumber("lkjlkjlkjlkj");
-		vozLoginPage.enterPassword("asdasd");
-		if (vozLoginPage.isMinlengthMessageDisplayed()) {
-			System.out.println("Test prošao: Prikazana je poruka 'Minimalno 9 karaktera'");
-		} else {
-			System.out.println("Test nije prošao: Poruka nije prikazana");
-		}
+		vozLoginPage.enterPassword("asdasd"); // Invalid password
 
+		if (vozLoginPage.isMinlengthMessageDisplayed()) {
+			System.out.println("Test PASSED: 'Minimum 9 characters' warning is displayed.");
+		} else {
+			System.out.println("Test FAILED: Warning message not displayed.");
+		}
 	}
 
-	// 5 test case: Validne Kredencijali
+	/**
+	 * Test Case 5: Enter valid credentials using data from TestDataVoz class.
+	 * Expected behavior: Form should be successfully submitted.
+	 */
 	@Test
 	public void loginWithvalidate() {
 		String actualTitle = vozLoginPage.getText();
