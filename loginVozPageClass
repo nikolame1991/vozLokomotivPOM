@@ -10,11 +10,18 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+/**
+ * Page Object Model class for the SRB Voz Registration (Login) page.
+ * Encapsulates all elements and actions related to the registration form.
+ */
 public class loginVozPageClass {
 	WebDriver driver;
 	WebDriverWait wait;
 
-	// Element
+	// =========================
+	// Web Elements (locators)
+	// =========================
+
 	@FindBy(css = ".sv-form-header > h4 ")
 	WebElement titleH4;
 
@@ -43,10 +50,10 @@ public class loginVozPageClass {
 	WebElement inputFieldPassword;
 
 	@FindBy(css = "form > :nth-child(7) > small:nth-child(3)")
-	WebElement firstMessagePassword;
+	WebElement firstMessagePassword; // Error message for minlength
 
 	@FindBy(css = "[ng-hide=\"passwordValid\"]")
-	WebElement secondMessagePassword;
+	WebElement secondMessagePassword; // Error message for invalid characters
 
 	@FindBy(css = "[ng-model=\"registration.promo\"]")
 	WebElement checkboxPromo;
@@ -60,89 +67,147 @@ public class loginVozPageClass {
 	@FindBy(css = "[ng-show=\"loadingmess\"]")
 	WebElement loadingMessage;
 
-	// Konstruktor
+	// =========================
+	// Constructor
+	// =========================
+
+	/**
+	 * Initializes the WebDriver, WebDriverWait and page elements
+	 * using Selenium's PageFactory.
+	 */
 	public loginVozPageClass(WebDriver driver) {
 		this.driver = driver;
 		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 		PageFactory.initElements(driver, this);
 	}
 
-	// Metod
+	// =========================
+	// Page Actions / Methods
+	// =========================
+
+	/**
+	 * Returns the registration page title text.
+	 */
 	public String getText() {
 		wait.until(ExpectedConditions.visibilityOf(titleH4));
 		return titleH4.getText();
 	}
 
+	/**
+	 * Enters first name into the input field.
+	 */
 	public void loginFirstName(String firstName) {
 		wait.until(ExpectedConditions.visibilityOf(inputFieldIme));
 		inputFieldIme.sendKeys(firstName);
 	}
 
+	/**
+	 * Enters last name into the input field.
+	 */
 	public void loginLastName(String lastName) {
 		wait.until(ExpectedConditions.visibilityOf(inputFieldPrezime));
 		inputFieldPrezime.sendKeys(lastName);
 	}
 
+	/**
+	 * Selects day from dropdown.
+	 */
 	public void selectDay(String day) {
 		wait.until(ExpectedConditions.visibilityOf(dropDownDay));
 		Select select = new Select(dropDownDay);
 		select.selectByVisibleText(day);
 	}
 
+	/**
+	 * Selects month from dropdown.
+	 */
 	public void selectMonth(String month) {
 		wait.until(ExpectedConditions.visibilityOf(dropDownMonth));
 		Select select = new Select(dropDownMonth);
 		select.selectByVisibleText(month);
 	}
 
+	/**
+	 * Selects year from dropdown.
+	 */
 	public void selectYear(String year) {
 		wait.until(ExpectedConditions.visibilityOf(droDownYear));
 		Select select = new Select(droDownYear);
 		select.selectByVisibleText(year);
 	}
 
+	/**
+	 * Enters phone number.
+	 */
 	public void loginPhoneNumber(String phone) {
 		wait.until(ExpectedConditions.visibilityOf(inputFieldNumber));
 		inputFieldNumber.sendKeys(phone);
 	}
 
+	/**
+	 * Enters email address.
+	 */
 	public void loginEmail(String email) {
 		wait.until(ExpectedConditions.visibilityOf(inputFieldEmail));
 		inputFieldEmail.sendKeys(email);
 	}
 
+	/**
+	 * Enters password.
+	 */
 	public void enterPassword(String password) {
 		wait.until(ExpectedConditions.visibilityOf(inputFieldPassword));
 		inputFieldPassword.sendKeys(password);
 	}
 
+	/**
+	 * Checks if the "min length" password warning is displayed.
+	 */
 	public boolean isMinlengthMessageDisplayed() {
 		return firstMessagePassword.isDisplayed();
 	}
 
+	/**
+	 * Checks if the "invalid characters" password warning is displayed.
+	 */
 	public boolean isInvalidCharMessageDisplayed() {
 		return secondMessagePassword.isDisplayed();
 	}
 
+	/**
+	 * Checks if promo checkbox is already selected.
+	 */
 	public boolean isPromoChecked() {
 		return checkboxPromo.isSelected();
 	}
 
+	/**
+	 * Checks if info checkbox is selected.
+	 */
 	public boolean isInfoCheckde() {
 		return checkboxInfo.isSelected();
 	}
 
+	/**
+	 * Selects the promo checkbox if not already selected.
+	 */
 	public void checkPromo() {
 		if (!checkboxPromo.isSelected()) {
 			checkboxPromo.click();
 		}
 	}
 
+	/**
+	 * Toggles the info checkbox (check/uncheck).
+	 */
 	public void toggleInfoCheckbox() {
 		wait.until(ExpectedConditions.elementToBeClickable(checkboxInfo));
 		checkboxInfo.click();
 	}
 
+	/**
+	 * Clicks on the register (submit) button.
+	 */
 	public void clickRegistre() {
 		wait.until(ExpectedConditions.elementToBeClickable(registerButton));
 		registerButton.click();
