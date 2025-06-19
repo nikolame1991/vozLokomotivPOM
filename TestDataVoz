@@ -2,7 +2,16 @@ package testClasses;
 
 import org.testng.annotations.DataProvider;
 
+/**
+ * This class provides test data for the SRB Voz automation project.
+ * It contains both valid data for positive testing, and invalid data
+ * for negative testing using the TestNG @DataProvider annotation.
+ */
 public class TestDataVoz {
+
+	// ===============================
+	// Valid User Data for Positive Tests
+	// ===============================
 	public String correctFirstName = "Nikola";
 	public String correctLastName = "Medan";
 	public String correctDay = "15";
@@ -12,18 +21,39 @@ public class TestDataVoz {
 	public String correctEmail = "nikola@gmail.com";
 	public String correctPassword = "nikola991";
 
+	/**
+	 * Data provider with multiple sets of incorrect user data.
+	 * Each array represents one test case with a missing field.
+	 * Used for negative test scenarios like required field validation.
+	 *
+	 * @return 2D array of invalid input combinations
+	 */
 	@DataProvider(name = "incorrectCredentials")
 	public Object[][] loginTestVoz() {
-		return new Object[][] { { "", "Medan", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazno
-																														// ime
-				{ "Nikola", "", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazno prezime
-				{ "Nikola", "Medan", "", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazan dan
-				{ "Nikola", "Medan", "15", "", "1991", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazan mesec
-				{ "Nikola", "Medan", "15", "Feb", "", "2312345666", "nikola@gmail.com", "nikola991" }, // Prazna godina
-				{ "Nikola", "Medan", "15", "Feb", "1991", "", "nikola@gmail.com", "nikola991" }, // Prazan telefon
-				{ "Nikola", "Medan", "15", "Feb", "1991", "2312345666", "", "nikola991" }, // Prazan email
-				{ "Nikola", "Medan", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "" } // Prazna lozinka
-		};
+		return new Object[][] {
+			// Missing first name
+			{ "", "Medan", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" },
 
+			// Missing last name
+			{ "Nikola", "", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" },
+
+			// Missing day
+			{ "Nikola", "Medan", "", "Feb", "1991", "2312345666", "nikola@gmail.com", "nikola991" },
+
+			// Missing month
+			{ "Nikola", "Medan", "15", "", "1991", "2312345666", "nikola@gmail.com", "nikola991" },
+
+			// Missing year
+			{ "Nikola", "Medan", "15", "Feb", "", "2312345666", "nikola@gmail.com", "nikola991" },
+
+			// Missing phone number
+			{ "Nikola", "Medan", "15", "Feb", "1991", "", "nikola@gmail.com", "nikola991" },
+
+			// Missing email
+			{ "Nikola", "Medan", "15", "Feb", "1991", "2312345666", "", "nikola991" },
+
+			// Missing password
+			{ "Nikola", "Medan", "15", "Feb", "1991", "2312345666", "nikola@gmail.com", "" }
+		};
 	}
 }
